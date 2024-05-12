@@ -30,18 +30,18 @@
                     @csrf
                   <div class="mb-3">
                     <label for="exampleInputtext1" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp" name="name" :value="old('name')">
+                    <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp" name="name" value={{old('name')}}>
                     <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500"  />
 
                   </div>
                   <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  name="email" :value="old('email')">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  name="email" value={{old('email')}}>
                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-500"  />
                   </div>
                   <div class="mb-4">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" name="password" :value="__('Password')">
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password" value={{old('password')}}>
                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-500"  />
                   </div>
                   <div class="mb-4">
