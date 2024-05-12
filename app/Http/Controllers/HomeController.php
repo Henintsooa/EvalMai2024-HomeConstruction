@@ -8,13 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Models\Pack;
-use App\Models\axe;
-use App\Models\lieu;
-use App\Models\packDetails;
-use App\Models\venteDetails;
-use Illuminate\Support\Facades\DB;
 
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
     
 
 class HomeController extends Controller
@@ -24,8 +21,9 @@ class HomeController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login'); 
         }
-            
-            return view('html.index'); 
+        $user = Auth::user();
+        
+        return view('html.index', ['user' => $user]);  
     }
 
     public function admin()
@@ -34,7 +32,9 @@ class HomeController extends Controller
             return redirect()->route('login'); 
         }
         
-        return view('html.index'); 
+        $user = Auth::user();
+        
+        return view('html.admin', ['user' => $user]);   
     }
 
     public function user()
@@ -43,7 +43,31 @@ class HomeController extends Controller
             return redirect()->route('login'); 
         }
       
-        return view('html.index'); 
+        $user = Auth::user();
+        
+        return view('html.index', ['user' => $user]);
     }
+    public function reset()
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
+        $tables = [
+            'users',
+            'test2',
+            'test',
+        ];
+
+        foreach ($tables as $table) {
+            if ($table === 'users') {
+                User::where('status', '!=', 'admin')->delete();
+            } else {
+                DB::table($table)->truncate();
+            }
+        }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+
+        return redirect()->back()->with('success', 'La base de données a été réinitialisée avec succès.');
+    }
 }

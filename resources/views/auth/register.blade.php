@@ -22,6 +22,8 @@
               <div class="card-body">
                 <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                   {{-- <img src="../assets/images/logos/dark-logo.svg" width="180" alt=""> --}}
+                  <img src="../assets/images/logos/logo.png" width="150" alt="">
+
                 </a>
                 <p class="text-center">Créer un compte</p>
                 <form method="POST" action="{{ route('register') }}">

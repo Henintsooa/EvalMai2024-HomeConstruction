@@ -18,9 +18,9 @@
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
+        <div class="brand-logo d-flex align-items-center justify-content-center" style="margin-top: 50px;">
           <a href="./index.html" class="text-nowrap logo-img">
-            <!-- <img src="../assets/images/logos/dark-logo.svg" width="180" alt="" /> -->
+          <img src="../assets/images/logos/logo.png" width="150" alt="" />
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
@@ -38,7 +38,7 @@
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
-                <span class="hide-menu">Vente Billet</span>
+                <span class="hide-menu">Demande devis</span>
               </a>
             </li>
           </ul>
@@ -64,7 +64,7 @@
             <li class="nav-item">
               <a class="nav-link nav-icon-hover" href="javascript:void(0)">
                 <i class="ti ti-bell-ringing"></i>
-                <div class="notification bg-primary rounded-circle"></div>
+                {{-- <div class="notification bg-primary rounded-circle"></div> --}}
               </a>
             </li>
           </ul>
@@ -85,7 +85,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  <img src="../assets/images/profile/icons8-user-96.png" alt="" width="35" height="35" class="rounded-circle">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">

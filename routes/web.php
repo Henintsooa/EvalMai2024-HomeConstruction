@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::post('/reset-database', [HomeController::class, 'reset']);
+
 Route::get('/dashboard_user', [HomeController::class, 'user'])->name('dashboard_user'); 
 Route::get('/dashboard_admin', [HomeController::class, 'admin'])->name('dashboard_admin'); 
 
