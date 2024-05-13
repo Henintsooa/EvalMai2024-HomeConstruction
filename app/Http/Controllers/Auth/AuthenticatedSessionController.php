@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::user()->isAdmin()) { // Vous devez implémenter la méthode isAdmin() dans votre modèle User
             return redirect()->route('dashboard_admin'); // Rediriger vers le tableau de bord de l'administrateur
         } else {
-            return redirect()->route('dashboard_user'); // Rediriger vers le tableau de bord de l'utilisateur simple
+            // return redirect()->route('dashboard_user'); // Rediriger vers le tableau de bord de l'utilisateur simple
         }
     }
 

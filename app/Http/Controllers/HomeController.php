@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 use App\Models\User;
+use App\Models\Client;
+use App\Models\PrixMaison;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
-    
+use Illuminate\Support\Facades\Session;    
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -36,17 +39,47 @@ class HomeController extends Controller
         
         return view('html.admin', ['user' => $user]);   
     }
-
     public function user()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login'); 
+        $client = session('client');
+        if (!$client) {
+            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour accéder à cette page.');
         }
-      
-        $user = Auth::user();
-        
-        return view('html.index', ['user' => $user]);
+
+        $prixMaisons = DB::table('prixMaison')->get();
+        return view('html.index', ['prixMaisons' => $prixMaisons, 'client' => $client]);
     }
+    public function loginClient(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'numero' => 'required|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        $client = Client::where('numero', $request->numero)->first();
+        if (!$client) {
+            return redirect()->back()->withErrors(['numero' => 'Le numéro de client est incorrect'])->withInput();
+        }
+        
+        Session::put('client', $client);
+        $prixMaisons=DB::table('prixMaison')->get();
+        return view('html.index',['prixMaisons'=>$prixMaisons]);  
+
+    }
+
+    // public function user()
+    // {
+    //     if (!Auth::check()) {
+    //         return redirect()->route('login'); 
+    //     }
+      
+    //     $user = Auth::user();
+        
+    //     return view('html.index', ['user' => $user]);
+    // }
     public function reset()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
