@@ -155,6 +155,16 @@ CREATE TABLE HistoriquePaiement (
 
 );
 
+CREATE TABLE  importMaisonTravaux (
+    date Datetime,
+    nomVendeur VARCHAR(100) NOT NULL,
+    pack VARCHAR(100) NOT NULL,
+    nomClient VARCHAR(100) NOT NULL,
+    contact VARCHAR(100) NOT NULL,
+    lieu    VARCHAR(100) 
+    );
+
+
 
 -- details travaux typeMaison
 
@@ -223,7 +233,7 @@ FROM
 LEFT JOIN 
     historiquePaiement h ON h.idDemandeDevis = v.idDemandeDevis;
 
-CREATE OR REPLACE VIEW ViewDetailsDevis AS
+-- CREATE OR REPLACE VIEW ViewDetailsDevis AS
 SELECT t.numero, t.designation, t.unite, dd.quantite, dd.pu, dd.prixTotal
 FROM devisDetails dd
 JOIN travaux t ON t.idTravaux = dd.idTravaux

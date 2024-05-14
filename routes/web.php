@@ -4,7 +4,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::post('/importCsv', [ImportController::class, 'importCsv'])->name('importCsv');
+Route::get('/importDonnee', [ImportController::class, 'importDonnee'])->name('importDonnee'); 
 
 Route::post('/histogramme', [HomeController::class, 'admin'])->name('histogramme'); 
 

@@ -50,7 +50,14 @@
                 <span class="hide-menu">Liste des devis</span>
               </a>
             </li>
-            
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{route('importDonnee')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Import données</span>
+              </a>
+            </li>
             @elseif(session()->has('client'))
             <li class="sidebar-item">
               <a class="sidebar-link" href="{{route('user')}}" aria-expanded="false">
