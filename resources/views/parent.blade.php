@@ -33,6 +33,25 @@
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">Home</span>
             </li>
+            @if(Auth::user()->status ?? '' == 'admin')
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{route('dashboard_admin')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Tableau de bord</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{route('listeDevisAdmin')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Liste des devis</span>
+              </a>
+            </li>
+            
+            @elseif(session()->has('client'))
             <li class="sidebar-item">
               <a class="sidebar-link" href="{{route('user')}}" aria-expanded="false">
                 <span>
@@ -49,6 +68,19 @@
                 <span class="hide-menu">Liste des devis</span>
               </a>
             </li>
+            @endif
+              <li class="nav-small-cap">
+                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <span class="hide-menu">AUTH</span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="{{ route('logout') }}" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-login"></i>
+                  </span>
+                  <span class="hide-menu">Logout</span>
+                </a>
+              </li>
           </ul>
 
         </nav>
@@ -105,14 +137,7 @@
                       <i class="ti ti-mail fs-6"></i>
                       <p class="mb-0 fs-3">Compte</p>
                     </a>
-                    {{-- <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
-                    </a> --}}
-                    <form method="POST" action="{{ route('logout') }}">
-                      @csrf
-                      <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</button>
-                    </form>
+                    
                   
                   </div>
                 </div>

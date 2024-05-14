@@ -22,7 +22,7 @@ CREATE TABLE Travaux (
     unite VARCHAR(100)
 );
 INSERT INTO Travaux (nomTypeTraveaux, designation, numero, pu, unite) VALUES 
-('TRAVAUX PREPARATIORE', 'Travaux de preparation', '001', 190000.00, 'm3');
+('TRAVAUX PREPARATIORE', 'Mur de soutenement et demi Cloture ht 1m', '001', 190000.00, 'm3');
 
 INSERT INTO Travaux (nomTypeTraveaux, designation, numero, pu, unite) VALUES 
 ('TRAVAUX DE TERRASSEMENT', 'Décapage des terrains meubles', '101',3072.87, 'm2'),
@@ -63,7 +63,7 @@ CREATE TABLE Maison (
 insert into Maison (idTypeMaison, nbrChambre, nbrSalon, nbrToilette, nbrCuisine)
 values
     (1, 2, 1, 1, 1),
-    (2, 3, 2, 2 AS FLOAT),
+    (2, 3, 2, 2,
     (3, 4, 3, 3, 3);
 
 CREATE TABLE Finition (
@@ -93,11 +93,12 @@ CREATE TABLE Devis (
     idDevis INT AUTO_INCREMENT PRIMARY KEY, 
     nomDevis VARCHAR(100),
     idTypeMaison INT,
+    dateDevis DateTime,
     FOREIGN KEY (idTypeMaison) REFERENCES TypeMaison(idTypeMaison)
 );
-INSERT INTO Devis (nomDevis,idTypeMaison) VALUES ('Devis maison boit', 1);
-INSERT INTO Devis (nomDevis,idTypeMaison) VALUES ('Devis maison pierre' AS FLOAT);
-INSERT INTO Devis (nomDevis,idTypeMaison) VALUES ('Devis maison parping', 3);
+INSERT INTO Devis (nomDevis,idTypeMaison,dateDevis) VALUES ('Devis maison boit', 1,'');
+INSERT INTO Devis (nomDevis,idTypeMaison,dateDevis) VALUES ('Devis maison pierre',2,'');
+INSERT INTO Devis (nomDevis,idTypeMaison,dateDevis) VALUES ('Devis maison parping', 3,'');
 
 CREATE TABLE DevisDetails (
     idDeviseDetails INT AUTO_INCREMENT PRIMARY KEY,
@@ -111,36 +112,36 @@ CREATE TABLE DevisDetails (
 );
 INSERT INTO DevisDetails (idDevis,idTravaux,quantite,pu,prixTotal)
 values
-    (1, 1, 26.98, (select pu from travaux where idTravaux = 1),CAST((select pu from travaux where idTravaux = 1)*26.98 AS FLOAT)),
-    (1, 2, 101.36, (select pu from travaux where idTravaux = 2),CAST((select pu from travaux where idTravaux = 2)*101.36 AS FLOAT)),
-    (1, 3, 101.36, (select pu from travaux where idTravaux = 3),CAST((select pu from travaux where idTravaux = 3)*101.36 AS FLOAT)),
-    (1, 4, 24.44, (select pu from travaux where idTravaux = 4),CAST((select pu from travaux where idTravaux = 4)*24.44 AS FLOAT)),
-    (1, 5, 15.59, (select pu from travaux where idTravaux = 5),CAST((select pu from travaux where idTravaux = 5)*15.59 AS FLOAT)),
-    (1, 6, 1, (select pu from travaux where idTravaux = 6),CAST((select pu from travaux where idTravaux = 6)*1 AS FLOAT)),
-    (1, 7, 9.62, (select pu from travaux where idTravaux = 7),CAST((select pu from travaux where idTravaux = 7)*9.62 AS FLOAT)),
-    (1, 8, 0.53, (select pu from travaux where idTravaux = 8),CAST((select pu from travaux where idTravaux = 8)*0.53 AS FLOAT)),
-    (1, 9, 0.56, (select pu from travaux where idTravaux = 9),CAST((select pu from travaux where idTravaux = 9)*0.56 AS FLOAT)),
-    (1, 10, 2.44, (select pu from travaux where idTravaux = 10),CAST((select pu from travaux where idTravaux = 10)*2.44 AS FLOAT)),
-    (1, 11, 15.59, (select pu from travaux where idTravaux = 11),CAST((select pu from travaux where idTravaux = 11)*15.59 AS FLOAT)),
-    (1, 12, 7.90, (select pu from travaux where idTravaux = 12),CAST((select pu from travaux where idTravaux = 12)*7.90 AS FLOAT)),
-    (1, 13, 9.62, (select pu from travaux where idTravaux = 13),CAST((select pu from travaux where idTravaux = 13)*9.62 AS FLOAT)),
-    (1, 14, 9.22, (select pu from travaux where idTravaux = 14),CAST((select pu from travaux where idTravaux = 14)*9.22 AS FLOAT)),
+    (1, 1, 26.98, (select pu from travaux where idTravaux = 1),(select pu from travaux where idTravaux = 1)*26.98),
+    (1, 2, 101.36, (select pu from travaux where idTravaux = 2),(select pu from travaux where idTravaux = 2)*101.36),
+    (1, 3, 101.36, (select pu from travaux where idTravaux = 3),(select pu from travaux where idTravaux = 3)*101.36),
+    (1, 4, 24.44, (select pu from travaux where idTravaux = 4),(select pu from travaux where idTravaux = 4)*24.44),
+    (1, 5, 15.59, (select pu from travaux where idTravaux = 5),(select pu from travaux where idTravaux = 5)*15.59),
+    (1, 6, 1, (select pu from travaux where idTravaux = 6),(select pu from travaux where idTravaux = 6)*1),
+    (1, 7, 9.62, (select pu from travaux where idTravaux = 7),(select pu from travaux where idTravaux = 7)*9.62),
+    (1, 8, 0.53, (select pu from travaux where idTravaux = 8),(select pu from travaux where idTravaux = 8)*0.53),
+    (1, 9, 0.56, (select pu from travaux where idTravaux = 9),(select pu from travaux where idTravaux = 9)*0.56),
+    (1, 10, 2.44, (select pu from travaux where idTravaux = 10),(select pu from travaux where idTravaux = 10)*2.44),
+    (1, 11, 15.59, (select pu from travaux where idTravaux = 11),(select pu from travaux where idTravaux = 11)*15.59),
+    (1, 12, 7.90, (select pu from travaux where idTravaux = 12),(select pu from travaux where idTravaux = 12)*7.90),
+    (1, 13, 9.62, (select pu from travaux where idTravaux = 13),(select pu from travaux where idTravaux = 13)*9.62),
+    (1, 14, 9.22, (select pu from travaux where idTravaux = 14),(select pu from travaux where idTravaux = 14)*9.22),
     --
-    (2, 1, 26.98, (select pu from travaux where idTravaux = 1),CAST((select pu from travaux where idTravaux = 1)*26.98 AS FLOAT)),
-    (2, 2, 101.36, (select pu from travaux where idTravaux = 2),CAST((select pu from travaux where idTravaux = 2)*101.36 AS FLOAT)),
-    (2, 3, 151.36, (select pu from travaux where idTravaux = 3),CAST((select pu from travaux where idTravaux = 3)*151.36 AS FLOAT)),
-    (2, 4, 24.44, (select pu from travaux where idTravaux = 4),CAST((select pu from travaux where idTravaux = 4)*24.44 AS FLOAT)),
-    (2, 5, 15.59, (select pu from travaux where idTravaux = 5),CAST((select pu from travaux where idTravaux = 5)*15.59 AS FLOAT)),
-    (2, 6, 12, (select pu from travaux where idTravaux = 6),CAST((select pu from travaux where idTravaux = 6)*12 AS FLOAT)),
-    (2, 7, 9.62, (select pu from travaux where idTravaux = 7),CAST((select pu from travaux where idTravaux = 7)*9.62 AS FLOAT)),
-    (2, 8, 3.53, (select pu from travaux where idTravaux = 8),CAST((select pu from travaux where idTravaux = 8)*3.53 AS FLOAT)),
-    (2, 9, 0.56, (select pu from travaux where idTravaux = 9),CAST((select pu from travaux where idTravaux = 9)*0.56 AS FLOAT)),
+    (2, 1, 26.98, (select pu from travaux where idTravaux = 1),(select pu from travaux where idTravaux = 1)*26.98),
+    (2, 2, 101.36, (select pu from travaux where idTravaux = 2),(select pu from travaux where idTravaux = 2)*101.36),
+    (2, 3, 151.36, (select pu from travaux where idTravaux = 3),(select pu from travaux where idTravaux = 3)*151.36),
+    (2, 4, 24.44, (select pu from travaux where idTravaux = 4),(select pu from travaux where idTravaux = 4)*24.44),
+    (2, 5, 15.59, (select pu from travaux where idTravaux = 5),(select pu from travaux where idTravaux = 5)*15.59),
+    (2, 6, 12, (select pu from travaux where idTravaux = 6),(select pu from travaux where idTravaux = 6)*12),
+    (2, 7, 9.62, (select pu from travaux where idTravaux = 7),(select pu from travaux where idTravaux = 7)*9.62),
+    (2, 8, 3.53, (select pu from travaux where idTravaux = 8),(select pu from travaux where idTravaux = 8)*3.53),
+    (2, 9, 0.56, (select pu from travaux where idTravaux = 9),(select pu from travaux where idTravaux = 9)*0.56),
     --
-    (3, 10, 12.44, (select pu from travaux where idTravaux = 10),CAST((select pu from travaux where idTravaux = 10)*12.44 AS FLOAT)),
-    (3, 11, 115.59, (select pu from travaux where idTravaux = 11),CAST((select pu from travaux where idTravaux = 11)*115.59 AS FLOAT)),
-    (3, 12, 7.90, (select pu from travaux where idTravaux = 12),CAST((select pu from travaux where idTravaux = 12)*7.90 AS FLOAT)),
-    (3, 13, 49.62, (select pu from travaux where idTravaux = 13),CAST((select pu from travaux where idTravaux = 13)*49.62 AS FLOAT)),
-    (3, 14, 29.22, (select pu from travaux where idTravaux = 14),CAST((select pu from travaux where idTravaux = 14)*29.22 AS FLOAT));
+    (3, 10, 12.44, (select pu from travaux where idTravaux = 10),(select pu from travaux where idTravaux = 10)*12.44),
+    (3, 11, 115.59, (select pu from travaux where idTravaux = 11),(select pu from travaux where idTravaux = 11)*115.59),
+    (3, 12, 7.90, (select pu from travaux where idTravaux = 12),(select pu from travaux where idTravaux = 12)*7.90),
+    (3, 13, 49.62, (select pu from travaux where idTravaux = 13),(select pu from travaux where idTravaux = 13)*49.62),
+    (3, 14, 29.22, (select pu from travaux where idTravaux = 14),(select pu from travaux where idTravaux = 14)*29.22);
     
 
 
@@ -195,7 +196,11 @@ select d.*,p.prixDevisTotal,p.idDevis,
 CASE 
     WHEN d.pourcentage = 1 THEN p.prixDevisTotal
     WHEN d.pourcentage != 1 THEN (p.prixDevisTotal*d.pourcentage)/100 + p.prixDevisTotal
-    END AS prixTotal
+    END AS prixTotal,
+CASE
+    WHEN d.pourcentage = 1 THEN 0
+    ELSE (p.prixDevisTotal * d.pourcentage) / 100
+    END AS prixPourcentage
 from ViewDemandeDevisDetails d 
 join prixMaison p on p.idMaison=d.idMaison 
 
@@ -215,19 +220,36 @@ FROM
 LEFT JOIN 
     historiquePaiement h ON h.idDemandeDevis = v.idDemandeDevis;
 
+CREATE OR REPLACE VIEW ViewDetailsDevis AS
+SELECT  v.idDevis,v.idClient,t.numero,t.designation,t.unite,details.quantite,details.pu,details.prixTotal,v.prixPourcentage,d.dateDevis
+from ViewListeDevis_Paiement v
+JOIN devis d on d.idDevis = v.idDevis
+JOIN devisDetails details on d.idDevis = details.idDevis
+JOIN travaux t on t.idTravaux = details.idTravaux
 
 
 
-CREATE VIEW PaiementHistorique AS
-SELECT 
-    demande.idDemandeDevis,
-    h.payer
-FROM 
-    demandeDevis demande
-LEFT JOIN 
-    paiement p ON p.idDemandeDevis = demande.idDemandeDevis
-LEFT JOIN 
-    historique h ON h.idPaiement = p.idPaiement;
+CREATE OR REPLACE VIEW ViewDevisAnneeMois AS
+SELECT
+    YEAR(d.dateDevis) AS annee,
+    MONTH(d.dateDevis) AS mois,
+    SUM( details.prixTotal) AS montantDevis
+FROM
+    devis d
+JOIN devisDetails details on d.idDevis = details.idDevis
+GROUP BY
+    YEAR(d.dateDevis), MONTH(d.dateDevis);
+
+CREATE OR REPLACE VIEW ViewDevisMois AS
+SELECT
+    MONTH(d.dateDevis) AS mois,
+    SUM( details.prixTotal) AS montantDevis
+FROM
+    devis d
+JOIN devisDetails details on d.idDevis = details.idDevis
+GROUP BY
+    MONTH(d.dateDevis);
+
 
 
 ALTER TABLE demandeDevis

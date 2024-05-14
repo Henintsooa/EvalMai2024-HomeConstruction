@@ -37,8 +37,14 @@ class HomeController extends Controller
         
         $user = Auth::user();
         
-        return view('html.admin', ['user' => $user]);   
+        $prixDevis = DB::table('ViewListeDevis_Paiement')->get();
+        $prixTotal = $prixDevis->sum('prixTotal');
+
+        $prixTotalDevis = DB::table('ViewDevisMois')->get();
+        
+        return view('html.admin', ['user' => $user, 'prixTotal' => $prixTotal, 'prixTotalDevis' => $prixTotalDevis]);   
     }
+
     public function user()
     {
         $client = session('client');

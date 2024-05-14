@@ -7,8 +7,8 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
-
+use Illuminate\Support\Facades\View;
+use Dompdf\Dompdf;   
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Finition;
@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;    
 use Illuminate\Support\Facades\Validator;
+
 
 class DevisController extends Controller
 {
@@ -68,5 +69,42 @@ class DevisController extends Controller
         $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idClient', $client->idClient)->get();
         return view('html.listeDevis',['listeDevis'=>$listeDevis]);
     }
+
+    public function detailsDevis($idDevis)
+    {
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDevis', $idDevis)->first();
+        $detailsDevis=DB::table('ViewDetailsDevis')->where('idDevis', $idDevis)->get();
+        return view('html.detailsDevis',['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis]);
+    }
+
+    public function pdfDevis($idDevis)
+    {
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDevis', $idDevis)->first();
+        $detailsDevis=DB::table('ViewDetailsDevis')->where('idDevis', $idDevis)->get();
+        
+        $html = View::make('pdf.PdfDetailsDevis')->with(['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis])->render();
+
+        // Créez un nouvel objet Dompdf
+        $dompdf = new Dompdf();
+
+        // Chargez le contenu HTML dans Dompdf
+        $dompdf->loadHtml($html);
+
+        // Rendez le document PDF
+        $dompdf->render();
+
+        // Générez le nom du fichier PDF
+        $filename = 'devisDetails.pdf';
+
+        // Téléchargez le fichier PDF
+        return $dompdf->stream($filename);
+    }
     
+
+    public function listeDevisAdmin()
+    {
+        $client = session('client');
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->get();
+        return view('html.adminListeDevis',['listeDevis'=>$listeDevis]);
+    }
 }
