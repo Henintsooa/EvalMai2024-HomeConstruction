@@ -9,7 +9,7 @@ class ViewListeDevisPaiement extends Model
 {
     use HasFactory;
     protected $table = 'ViewListeDevis_Paiement';
-    protected $fillable = ['idMaison','idFinition','nomFinition','pourcentage','DateDebut','DateFin','idDemandeDevis',
+    protected $fillable = ['idMaison','idFinition','nomFinition','pourcentage','DateCreation','DateDebut','DateFin','idDemandeDevis',
     'idClient','numero','prixDevisTotal','idDevis','prixTotal','prixPourcentage','payer','resteAPayer','etatPaiement'];
 
 

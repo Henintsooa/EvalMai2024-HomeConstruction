@@ -193,12 +193,12 @@
             <tr>
               <td colspan="4"></td>
               <td>Finition:</td>
-              <td>{{ number_format($detailsDevis[0]->prixPourcentage, 2, ',', ' ') }} Ar</td>
+              <td>{{ number_format($listeDevis->prixPourcentage, 2, ',', ' ') }} Ar</td>
             </tr>
             <tr>
               <td colspan="4"></td>
               <td>Somme Total:</td>
-              <td>{{ number_format($sumTotal + $detailsDevis[0]->prixPourcentage, 2, ',', ' ') }} Ar</td>
+              <td>{{ number_format($sumTotal + $listeDevis->prixPourcentage, 2, ',', ' ') }} Ar</td>
             </tr>
           </tbody>
         </table>

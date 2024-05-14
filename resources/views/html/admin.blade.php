@@ -50,14 +50,21 @@
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
                     <h5 class="card-title fw-semibold">Montant des devis par mois et année</h5>
-                  </div>
-                  <div>
-                    {{-- <select class="form-select">
-                      <option value="1">March 2023</option>
-                      <option value="2">April 2023</option>
-                      <option value="3">May 2023</option>
-                      <option value="4">June 2023</option>
-                    </select> --}}
+                    </div>
+                    <div>
+                    <form method="POST" action="{{ route('histogramme') }}">
+                      @csrf
+                      <div class="d-flex align-items-center">
+                      <select name="date" class="form-select me-2" id="yearSelector">
+                        <option value="">Choisir année</option>
+                        @foreach ($annees as $item)
+                        <option value="{{ $item->annee }}">{{ $item->annee }}</option>
+                        @endforeach
+                      </select>
+                      <button type="submit" class="btn btn-success">Valider</button>
+                      </div>
+                    </form>
+                    </div>
                   </div>
                 </div>
                 <div id="chart"></div>
@@ -72,12 +79,13 @@
         </form>
       </div>
     
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="../assets/libs/apexcharts/dist/apexcharts.js"></script>
     
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var prixTotalDevisData = @json($prixTotalDevis);
-        var mois = prixTotalDevisData.map(function(item) {
+
+        var donneesHistogrammeData = @json($donneesHistogramme) ;
+        var mois = donneesHistogrammeData.map(function(item) {
           // Convertir le chiffre de mois en nom de mois correspondant
           var moisString = '';
           switch (item.mois) {
@@ -123,7 +131,7 @@
           return moisString;
         });   
         
-        var devis = prixTotalDevisData.map(function(item) {
+        var devis = donneesHistogrammeData.map(function(item) {
           return parseInt(item.montantDevis);
         });
         // Initialiser les données de base

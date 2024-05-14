@@ -97,13 +97,13 @@
                               <p class="badge bg-danger mb-0 fw-normal">{{ $devis->etatPaiement }}</p>
                             </td>
                             <td class="border-bottom-0">
-                              <a href="{{route('detailsDevis', ['idDevis' => $devis->idDevis]) }}" class="btn btn-primary btn-sm">Détails</a>
+                              <a href="{{route('detailsDevis')}}?idDevis={{ $devis->idDevis }}&idDemandeDevis={{ $devis->idDemandeDevis }}" class="btn btn-primary btn-sm">Détails</a>
                             </td>
                             <td class="border-bottom-0">
                               <a href="{{route('paiement', ['idDemandeDevis' => $devis->idDemandeDevis]) }}" class="btn btn-success btn-sm">Payer</a>
                             </td>
                             <td class="border-bottom-0">
-                              <a href="{{ route('pdfDevis', ['idDevis' => $devis->idDevis]) }}" class="fw-semibold mb-0 sort-link">Export Pdf</a>
+                              <a href="{{ route('pdfDevis')}}?idDevis={{ $devis->idDevis }}&idDemandeDevis={{ $devis->idDemandeDevis }}" class="fw-semibold mb-0 sort-link">Export Pdf</a>
                             </td>
                         </tr>
                         @endforeach

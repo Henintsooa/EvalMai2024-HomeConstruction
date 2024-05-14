@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\Validator;
 
 class DevisController extends Controller
 {
-    public function finition($idMaison)
+    public function finition(Request $request)
     {
+        $idMaison = $request->input('idMaison');
         $finitions = Finition::all();
         return view('html.finition',['finitions'=>$finitions,'idMaison'=>$idMaison]);  
     }
@@ -70,17 +71,34 @@ class DevisController extends Controller
         return view('html.listeDevis',['listeDevis'=>$listeDevis]);
     }
 
-    public function detailsDevis($idDevis)
+    public function detailsDevis()
     {
-        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDevis', $idDevis)->first();
-        $detailsDevis=DB::table('ViewDetailsDevis')->where('idDevis', $idDevis)->get();
+        $idDevis = request()->query('idDevis');
+        $idDemandeDevis = request()->query('idDemandeDevis');
+
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDemandeDevis', $idDemandeDevis)->first();
+
+        $detailsDevis = DB::table('devisDetails')
+            ->join('travaux', 'travaux.idTravaux', '=', 'devisDetails.idTravaux')
+            ->select('travaux.numero', 'travaux.designation', 'travaux.unite', 'devisDetails.quantite', 'devisDetails.pu', 'devisDetails.prixTotal')
+            ->where('devisDetails.idDevis', $idDevis)
+            ->get();
+
         return view('html.detailsDevis',['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis]);
     }
 
-    public function pdfDevis($idDevis)
+    public function pdfDevis()
     {
-        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDevis', $idDevis)->first();
-        $detailsDevis=DB::table('ViewDetailsDevis')->where('idDevis', $idDevis)->get();
+        $idDevis = request()->query('idDevis');
+        $idDemandeDevis = request()->query('idDemandeDevis');
+        
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDemandeDevis', $idDemandeDevis)->first();
+
+        $detailsDevis = DB::table('devisDetails')
+            ->join('travaux', 'travaux.idTravaux', '=', 'devisDetails.idTravaux')
+            ->select('travaux.numero', 'travaux.designation', 'travaux.unite', 'devisDetails.quantite', 'devisDetails.pu', 'devisDetails.prixTotal')
+            ->where('devisDetails.idDevis', $idDevis)
+            ->get();
         
         $html = View::make('pdf.PdfDetailsDevis')->with(['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis])->render();
 

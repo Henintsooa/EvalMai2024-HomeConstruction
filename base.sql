@@ -82,6 +82,7 @@ CREATE TABLE DemandeDevis (
     idMaison INT,
     idClient INT,
     idFinition INT,
+    DateCreation DateTime,
     DateDebut DateTime,
     DateFin DateTime,
     FOREIGN KEY (idMaison) REFERENCES Maison(idMaison),
@@ -93,12 +94,11 @@ CREATE TABLE Devis (
     idDevis INT AUTO_INCREMENT PRIMARY KEY, 
     nomDevis VARCHAR(100),
     idTypeMaison INT,
-    dateDevis DateTime,
     FOREIGN KEY (idTypeMaison) REFERENCES TypeMaison(idTypeMaison)
 );
-INSERT INTO Devis (nomDevis,idTypeMaison,dateDevis) VALUES ('Devis maison boit', 1,'');
-INSERT INTO Devis (nomDevis,idTypeMaison,dateDevis) VALUES ('Devis maison pierre',2,'');
-INSERT INTO Devis (nomDevis,idTypeMaison,dateDevis) VALUES ('Devis maison parping', 3,'');
+INSERT INTO Devis (nomDevis,idTypeMaison) VALUES ('Devis maison boit', 1);
+INSERT INTO Devis (nomDevis,idTypeMaison) VALUES ('Devis maison pierre',2);
+INSERT INTO Devis (nomDevis,idTypeMaison) VALUES ('Devis maison parping', 3);
 
 CREATE TABLE DevisDetails (
     idDeviseDetails INT AUTO_INCREMENT PRIMARY KEY,
@@ -155,11 +155,8 @@ CREATE TABLE HistoriquePaiement (
 
 );
 
--- select d.idDetail, d.idDevis, ty.idType, ty.designation, d.idTache, t.designation, d.quantite*t.pu as montantTache from detaildevis d
--- 	join tache t on t.idTache = d.idTache
--- 	join devis dev on dev.idDevis = d.idDevis
--- 	join typeMaison ty on ty.idType = dev.idTypeMaison
--- 	order by d.id
+
+-- details travaux typeMaison
 
 CREATE OR REPLACE View prixMaison AS
 select d.idDevis,m.idMaison,tm.idTypeMaison,tm.nomMaison,sum(dd.prixTotal) as prixDevisTotal,m.nbrChambre,m.nbrCuisine,m.nbrSalon,m.nbrToilette from maison m
@@ -168,12 +165,15 @@ join devis d on tm.idTypeMaison = d.idTypeMaison
 join DevisDetails dd on d.idDevis = dd.idDevis
 group by m.idMaison,d.idDevis,tm.idTypeMaison,tm.nomMaison,m.nbrChambre,m.nbrCuisine,m.nbrSalon,m.nbrToilette;
 
+-- details demande de devis
+
 CREATE OR REPLACE VIEW ViewDemandeDevisDetails AS
 SELECT 
     m.idMaison,
     f.idFinition,
     f.nomFinition,
     f.pourcentage,
+    demande.DateCreation,
     demande.DateDebut,
     demande.DateFin,
     demande.idDemandeDevis,
@@ -190,6 +190,8 @@ JOIN
 ORDER BY 
     demande.idDemandeDevis;
 
+-- details Prix pourcentage
+
 CREATE OR REPLACE VIEW ViewListeDevis_Prix AS
 
 select d.*,p.prixDevisTotal,p.idDevis, 
@@ -204,6 +206,7 @@ CASE
 from ViewDemandeDevisDetails d 
 join prixMaison p on p.idMaison=d.idMaison 
 
+-- details Paiement
 
 CREATE OR REPLACE VIEW ViewListeDevis_Paiement AS
 SELECT 
@@ -221,34 +224,29 @@ LEFT JOIN
     historiquePaiement h ON h.idDemandeDevis = v.idDemandeDevis;
 
 CREATE OR REPLACE VIEW ViewDetailsDevis AS
-SELECT  v.idDevis,v.idClient,t.numero,t.designation,t.unite,details.quantite,details.pu,details.prixTotal,v.prixPourcentage,d.dateDevis
-from ViewListeDevis_Paiement v
-JOIN devis d on d.idDevis = v.idDevis
-JOIN devisDetails details on d.idDevis = details.idDevis
-JOIN travaux t on t.idTravaux = details.idTravaux
+SELECT t.numero, t.designation, t.unite, dd.quantite, dd.pu, dd.prixTotal
+FROM devisDetails dd
+JOIN travaux t ON t.idTravaux = dd.idTravaux
+WHERE dd.idDevis = $idDevis;
 
 
 
-CREATE OR REPLACE VIEW ViewDevisAnneeMois AS
+
+-- state
+
+select distinct EXTRACT(year FROM v.DateCreation) AS annee
+from ViewListeDevis_Prix v 
+group by EXTRACT(year FROM v.DateCreation);
+
+
 SELECT
-    YEAR(d.dateDevis) AS annee,
-    MONTH(d.dateDevis) AS mois,
-    SUM( details.prixTotal) AS montantDevis
+    MONTH(d.DateCreation) AS mois,
+    SUM(d.prixTotal) AS montantDevis
 FROM
-    devis d
-JOIN devisDetails details on d.idDevis = details.idDevis
+    ViewListeDevis_Prix d
+WHERE EXTRACT(year FROM d.DateCreation) = 2023
 GROUP BY
-    YEAR(d.dateDevis), MONTH(d.dateDevis);
-
-CREATE OR REPLACE VIEW ViewDevisMois AS
-SELECT
-    MONTH(d.dateDevis) AS mois,
-    SUM( details.prixTotal) AS montantDevis
-FROM
-    devis d
-JOIN devisDetails details on d.idDevis = details.idDevis
-GROUP BY
-    MONTH(d.dateDevis);
+    MONTH(d.DateCreation);
 
 
 

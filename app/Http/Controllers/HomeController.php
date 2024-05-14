@@ -40,9 +40,25 @@ class HomeController extends Controller
         $prixDevis = DB::table('ViewListeDevis_Paiement')->get();
         $prixTotal = $prixDevis->sum('prixTotal');
 
-        $prixTotalDevis = DB::table('ViewDevisMois')->get();
+        $annees = DB::table('ViewListeDevis_Prix AS v')
+            ->select(DB::raw('EXTRACT(year FROM v.DateCreation) AS annee'))
+            ->groupBy(DB::raw('EXTRACT(year FROM v.DateCreation)'))
+            ->get();    
+        if (request()->input('date')) {
+            $donneesHistogramme = DB::table('ViewListeDevis_Prix AS d')
+                ->select(DB::raw('MONTH(d.DateCreation) AS mois, SUM(d.prixTotal) AS montantDevis'))
+                ->whereRaw('EXTRACT(year FROM d.DateCreation) = ?', [request()->input('date')])
+                ->groupBy(DB::raw('MONTH(d.DateCreation)'))
+                ->get();
+        }else{
+            $donneesHistogramme = DB::table('ViewListeDevis_Prix AS d')
+                ->select(DB::raw('MONTH(d.DateCreation) AS mois, SUM(d.prixTotal) AS montantDevis'))
+                ->whereRaw('EXTRACT(year FROM d.DateCreation) = ?', [date('Y')])
+                ->groupBy(DB::raw('MONTH(d.DateCreation)'))
+                ->get();
+        }
         
-        return view('html.admin', ['user' => $user, 'prixTotal' => $prixTotal, 'prixTotalDevis' => $prixTotalDevis]);   
+        return view('html.admin', ['user' => $user, 'prixTotal' => $prixTotal, 'annees' => $annees, 'donneesHistogramme' => $donneesHistogramme]);   
     }
 
     public function user()

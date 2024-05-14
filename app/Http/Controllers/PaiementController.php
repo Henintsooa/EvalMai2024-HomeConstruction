@@ -52,7 +52,6 @@ class PaiementController extends Controller
         DB::table('historiquePaiement')->insert([
             'datePaiement' => $request->input('datePaiement'),
             'payer' => $request->input('montant'),
-            // Add other fields to insert here
         ]);
 
         return redirect()->back()->with('success', 'Paiement enregistré avec succès.');

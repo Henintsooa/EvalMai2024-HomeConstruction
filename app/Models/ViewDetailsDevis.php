@@ -9,6 +9,6 @@ class ViewDetailsDevis extends Model
 {
     use HasFactory;
     protected $table = 'ViewDetailsDevis';
-    protected $fillable = ['idDevis','idClient','numero','designation','unite','quantite','pu','prixTotal','prixPourcentage','dateDevis'];
+    protected $fillable = ['idDevis','idClient','numero','designation','unite','quantite','pu','prixTotal','prixPourcentage','DateCreation'];
 
 }

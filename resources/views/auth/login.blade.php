@@ -36,14 +36,14 @@
                     @enderror
                   </div>        
                   <button type="submit"  class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Connecter</button>
-                    @if (Route::has('register'))
+                    {{-- @if (Route::has('register'))
                         <a
                             href="{{ route('register') }}"
                             class="text-primary fw-bold ms-2"
                         >
                             Admin
                         </a>
-                    @endif
+                    @endif --}}
                 </form>
               </div>
             </div>

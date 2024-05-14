@@ -45,11 +45,21 @@
                           <span class="fw-semibold"> {{$prixMaison->nbrToilette}} Toilettes </span>
                       </li>
                     </ul>
-                    <a href="{{route('finition', ['idMaison' => $prixMaison->idMaison]) }}" class="btn btn-primary mt-3 w-100">Select</a> 
-                </div>
+                    <form action="{{route('finition') }}" method="get">
+                    <div>
+                        <input  class="form-check-input" type="radio" name="idMaison" value="{{$prixMaison->idMaison}}" id="{{$prixMaison->idMaison}}" class="me-2" style="transform: scale(1.5); margin-top: 10px;">
+                    </div>
+
+                </div>  
             </div>
         </div>
         @endforeach
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-3" style="width: 300px;">Select</button> 
+        </div>
+                    </form>
+
+
     </div>
 </div>
 </div>

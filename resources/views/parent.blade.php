@@ -74,7 +74,7 @@
                 <span class="hide-menu">AUTH</span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="{{ route('logout') }}" aria-expanded="false">
+                <a class="sidebar-link" href="{{ route('GETlogout') }}" aria-expanded="false">
                   <span>
                     <i class="ti ti-login"></i>
                   </span>
