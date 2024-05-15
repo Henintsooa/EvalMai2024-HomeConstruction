@@ -10,7 +10,7 @@ class HistoriquePaiement extends Model
     use HasFactory;
     protected $table = 'HistoriquePaiement';
     protected $primaryKey = 'idHistorique';
-    protected $fillable = ['datePaiement','payer','idDemandeDevis'];
+    protected $fillable = ['datePaiement','payer','idDemandeDevis','refDevis','refPaiement'];
 
 
 }

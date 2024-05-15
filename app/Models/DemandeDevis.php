@@ -10,7 +10,7 @@ class DemandeDevis extends Model
     use HasFactory;
     protected $table = 'demandeDevis';
     protected $primaryKey = 'idDemandeDevis';
-    protected $fillable = ['idMaison','idClient','idFinition','dateDebut','dateFin'];
+    protected $fillable = ['idTypeMaison','idClient','idFinition','dateDebut','dateFin','dateCreation','lieu'];
 
 
 }

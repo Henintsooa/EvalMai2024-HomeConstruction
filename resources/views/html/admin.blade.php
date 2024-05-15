@@ -41,6 +41,29 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row alig n-items-start">
+                      <div class="col-8">
+                        <h5 class="card-title mb-9 fw-semibold"> Montant Total de paiement effectué </h5>
+                        <h4 class="fw-semibold mb-3">{{ number_format($payer,2, ',', ' ') }} Ar</h4>
+                        <div class="d-flex align-items-center pb-1">
+                          
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="d-flex justify-content-end">
+                          <div
+                            class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                            <i class="ti ti-currency-dollar fs-6"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -71,12 +94,12 @@
               </div>
             </div>
           </div>
-         
+          <form method="POST" action="{{ url('/reset-database') }}">
+            @csrf
+            <button type="submit" class="btn btn-danger ">Réinitialiser la base de données</button>
+          </form>
         </div>
-        <form method="POST" action="{{ url('/reset-database') }}">
-          @csrf
-          <button type="submit" class="btn btn-danger ">Réinitialiser la base de données</button>
-        </form>
+        
       </div>
     
   <script src="../assets/libs/apexcharts/dist/apexcharts.js"></script>

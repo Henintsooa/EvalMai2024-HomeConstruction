@@ -5,9 +5,21 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DevisController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\TravauxController;
+use App\Http\Controllers\FinitionController;
 use Illuminate\Support\Facades\Route;
 
 
+
+Route::put('/editFinition', [FinitionController::class, 'editFinition'])->name('editFinition'); 
+Route::get('/updateFinition/{idFinition}', [FinitionController::class, 'updateFinition'])->name('updateFinition'); 
+Route::get('/adminFinition', [FinitionController::class, 'finition'])->name('adminFinition'); 
+
+Route::put('/editTravaux', [TravauxController::class, 'editTravaux'])->name('editTravaux'); 
+Route::get('/updateTravaux/{idTravaux}', [TravauxController::class, 'updateTravaux'])->name('updateTravaux'); 
+Route::get('/travaux', [TravauxController::class, 'travaux'])->name('travaux'); 
+// Route::post('/importDevis', [ImportController::class, 'importDevis'])->name('importDevis');
+Route::post('/importPaiement', [ImportController::class, 'importPaiement'])->name('importPaiement');
 Route::post('/importCsv', [ImportController::class, 'importCsv'])->name('importCsv');
 Route::get('/importDonnee', [ImportController::class, 'importDonnee'])->name('importDonnee'); 
 

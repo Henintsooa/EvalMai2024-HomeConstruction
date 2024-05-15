@@ -15,14 +15,13 @@ INSERT INTO TypeTravaux (nomTypeTravaux, numero) VALUES ('TRAVAUX EN INFRASTRUCT
 
 CREATE TABLE Travaux (
     idTravaux INT AUTO_INCREMENT PRIMARY KEY,
-    nomTypeTraveaux VARCHAR(100),
     designation VARCHAR(100),
     numero VARCHAR(100),
     pu FLOAT,
     unite VARCHAR(100)
 );
-INSERT INTO Travaux (nomTypeTraveaux, designation, numero, pu, unite) VALUES 
-('TRAVAUX PREPARATIORE', 'Mur de soutenement et demi Cloture ht 1m', '001', 190000.00, 'm3');
+INSERT INTO Travaux ( designation, numero, pu, unite) VALUES 
+('Mur de soutenement et demi Cloture ht 1m', '001', 190000.00, 'm3');
 
 INSERT INTO Travaux (nomTypeTraveaux, designation, numero, pu, unite) VALUES 
 ('TRAVAUX DE TERRASSEMENT', 'Décapage des terrains meubles', '101',3072.87, 'm2'),
@@ -54,22 +53,20 @@ INSERT INTO TypeMaison (nomMaison, duree) VALUES ('Maison en parping', 140);
 CREATE TABLE Maison (
     idMaison INT AUTO_INCREMENT PRIMARY KEY,
     idTypeMaison INT,
-    nbrChambre INT,
-    nbrSalon INT,
-    nbrToilette INT,
-    nbrCuisine INT,
+    description VARCHAR(200),
+    surface Double(20,2),
     FOREIGN KEY (idTypeMaison) REFERENCES TypeMaison(idTypeMaison)
 );
-insert into Maison (idTypeMaison, nbrChambre, nbrSalon, nbrToilette, nbrCuisine)
+insert into Maison (idTypeMaison,description,surface)
 values
     (1, 2, 1, 1, 1),
-    (2, 3, 2, 2,
+    (2, 3, 2, 2),
     (3, 4, 3, 3, 3);
 
 CREATE TABLE Finition (
     idFinition INT AUTO_INCREMENT PRIMARY KEY,
     nomFinition VARCHAR(100),
-    pourcentage INT
+    pourcentage Double(20,2)
 );
 INSERT INTO Finition (nomFinition,pourcentage) VALUES
 ('Standard',1),
@@ -79,13 +76,14 @@ INSERT INTO Finition (nomFinition,pourcentage) VALUES
 
 CREATE TABLE DemandeDevis (
     idDemandeDevis INT AUTO_INCREMENT PRIMARY KEY,
-    idMaison INT,
+    idTypeMaison INT,
     idClient INT,
     idFinition INT,
+    pourcentage Double(20,2),
     DateCreation DateTime,
     DateDebut DateTime,
     DateFin DateTime,
-    FOREIGN KEY (idMaison) REFERENCES Maison(idMaison),
+    FOREIGN KEY (idTypeMaison) REFERENCES TypeMaison(idTypeMaison),
     FOREIGN KEY (idClient) REFERENCES client(idClient),
     FOREIGN KEY (idFinition) REFERENCES Finition(idFinition)
 );
@@ -151,38 +149,59 @@ CREATE TABLE HistoriquePaiement (
     datePaiement DateTime,
     payer FLOAT,
     idDemandeDevis INT,
+    refDevis VARCHAR(100),
+    refPaiement VARCHAR(100),
     FOREIGN KEY (idDemandeDevis) REFERENCES DemandeDevis(idDemandeDevis)
 
 );
 
 CREATE TABLE  importMaisonTravaux (
-    date Datetime,
-    nomVendeur VARCHAR(100) NOT NULL,
-    pack VARCHAR(100) NOT NULL,
-    nomClient VARCHAR(100) NOT NULL,
-    contact VARCHAR(100) NOT NULL,
-    lieu    VARCHAR(100) 
+    typeMaison VARCHAR(100),
+    description VARCHAR(100),
+    surface Double(20,2),
+    codeTravaux VARCHAR(100),
+    typeTravaux VARCHAR(100),
+    unite VARCHAR(100),
+    prixUnitaire Double(20,2),
+    quantite Double(20,2),
+    dureeTravaux int
     );
 
+CREATE TABLE  importDevis (
+    client VARCHAR(100),
+    refDevis VARCHAR(100),
+    typeMaison VARCHAR(100),
+    finition VARCHAR(100),
+    tauxFinition Double(20,2),
+    dateDevis DateTime,
+    dateDebut DateTime,
+    lieu VARCHAR(100)
+    );
 
+CREATE TABLE  importPaiement (
+    refDevis VARCHAR(100),
+    refPaiement VARCHAR(100),
+    datePaiement DateTime,
+    montant Double(20,2)
+    );
 
 -- details travaux typeMaison
 
 CREATE OR REPLACE View prixMaison AS
-select d.idDevis,m.idMaison,tm.idTypeMaison,tm.nomMaison,sum(dd.prixTotal) as prixDevisTotal,m.nbrChambre,m.nbrCuisine,m.nbrSalon,m.nbrToilette from maison m
+select d.idDevis,m.idMaison,tm.idTypeMaison,tm.nomMaison,sum(dd.prixTotal) as prixDevisTotal,m.description from maison m
 join typeMaison tm on m.idTypeMaison = tm.idTypeMaison
 join devis d on tm.idTypeMaison = d.idTypeMaison
 join DevisDetails dd on d.idDevis = dd.idDevis
-group by m.idMaison,d.idDevis,tm.idTypeMaison,tm.nomMaison,m.nbrChambre,m.nbrCuisine,m.nbrSalon,m.nbrToilette;
-
+group by m.idMaison,d.idDevis,tm.idTypeMaison,tm.nomMaison,m.description;
+    
 -- details demande de devis
 
 CREATE OR REPLACE VIEW ViewDemandeDevisDetails AS
 SELECT 
-    m.idMaison,
+    demande.idTypeMaison,
     f.idFinition,
     f.nomFinition,
-    f.pourcentage,
+    demande.pourcentage,
     demande.DateCreation,
     demande.DateDebut,
     demande.DateFin,
@@ -191,8 +210,6 @@ SELECT
     c.numero
 FROM 
     demandeDevis demande
-JOIN 
-    maison m ON m.idMaison = demande.idMaison
 JOIN 
     finition f ON f.idFinition = demande.idFinition
 JOIN 
@@ -206,17 +223,19 @@ CREATE OR REPLACE VIEW ViewListeDevis_Prix AS
 
 select d.*,p.prixDevisTotal,p.idDevis, 
 CASE 
-    WHEN d.pourcentage = 1 THEN p.prixDevisTotal
-    WHEN d.pourcentage != 1 THEN (p.prixDevisTotal*d.pourcentage)/100 + p.prixDevisTotal
+    WHEN d.pourcentage = 1 OR d.pourcentage = 0 THEN p.prixDevisTotal
+    WHEN d.pourcentage != 1 THEN (p.prixDevisTotal * d.pourcentage) / 100 + p.prixDevisTotal
     END AS prixTotal,
 CASE
     WHEN d.pourcentage = 1 THEN 0
     ELSE (p.prixDevisTotal * d.pourcentage) / 100
     END AS prixPourcentage
 from ViewDemandeDevisDetails d 
-join prixMaison p on p.idMaison=d.idMaison 
+join prixMaison p on p.idTypeMaison=d.idTypeMaison 
 
 -- details Paiement
+
+-- ito  groupé par idDemandeDevis
 
 CREATE OR REPLACE VIEW ViewListeDevis_Paiement AS
 SELECT 
@@ -227,11 +246,21 @@ SELECT
         WHEN COALESCE(h.payer, 0) = 0 THEN 'Non payé'
         WHEN COALESCE(h.payer, 0) < v.prixTotal THEN 'En cours'
         ELSE 'Payé'
-    END AS etatPaiement
+    END AS etatPaiement,
+    (COALESCE(h.payer, 0) / v.prixTotal) * 100 AS pourcentagePaye
 FROM 
     ViewListeDevis_Prix v
 LEFT JOIN 
-    historiquePaiement h ON h.idDemandeDevis = v.idDemandeDevis;
+    ViewHistoriquePaiement h ON h.idDemandeDevis = v.idDemandeDevis;
+ 
+
+--- HistoriquePaiement ByDemandeDevis
+CREATE OR REPLACE VIEW ViewHistoriquePaiement AS
+SELECT SUM(payer) as payer, idDemandeDevis, refDevis
+FROM historiquePaiement
+GROUP BY idDemandeDevis, refDevis;
+
+
 
 -- CREATE OR REPLACE VIEW ViewDetailsDevis AS
 SELECT t.numero, t.designation, t.unite, dd.quantite, dd.pu, dd.prixTotal

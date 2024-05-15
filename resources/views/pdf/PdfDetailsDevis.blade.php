@@ -119,7 +119,7 @@
           <span class="info-label">Client :</span> {{ $listeDevis->numero }}
         </div>
         <div class="info-item">
-          <span class="info-label">Maison :</span> {{ $listeDevis->idMaison }}
+          <span class="info-label">Maison :</span> {{ $listeDevis->idTypeMaison }}
         </div>
         <div class="info-item">
           <span class="info-label">Date Debut :</span> {{ \Carbon\Carbon::parse($listeDevis->DateDebut)->isoFormat('D MMMM YYYY') }}

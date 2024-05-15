@@ -24,30 +24,19 @@
                             <a href="#" class="btn btn-success rounded-circle p-2 text-white d-inline-flex me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="">
                                 <i class="ti ti-check fs-4"></i>
                             </a>
-                            <span class="fw-semibold"> {{$prixMaison->nbrChambre}} Chambres</span>
-                        </li>
-                        <li class="list-group-item list-group-item-action d-flex justify-content-start align-items-center">
-                            <a href="#" class="btn btn-success rounded-circle p-2 text-white d-inline-flex me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="">
-                                <i class="ti ti-check fs-4"></i>
-                            </a>
-                            <span class="fw-semibold"> {{$prixMaison->nbrSalon}}  Salon</span>
-                        </li>
-                        <li class="list-group-item list-group-item-action d-flex justify-content-start align-items-center">
-                            <a href="#" class="btn btn-success rounded-circle p-2 text-white d-inline-flex me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="">
-                                <i class="ti ti-check fs-4"></i>
-                            </a>
-                            <span class="fw-semibold"> {{$prixMaison->nbrCuisine}} Cuisine </span>
-                        </li>
-                        <li class="list-group-item list-group-item-action d-flex justify-content-start align-items-center">
-                          <a href="#" class="btn btn-success rounded-circle p-2 text-white d-inline-flex me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="">
-                              <i class="ti ti-check fs-4"></i>
-                          </a>
-                          <span class="fw-semibold"> {{$prixMaison->nbrToilette}} Toilettes </span>
-                      </li>
+                            <span class="fw-semibold text-center"> 
+                                @php
+                                    $description = explode(',', $prixMaison->description);
+                                @endphp
+                                @foreach($description as $desc)
+                                    {{$desc}}<br>
+                                @endforeach
+                            </span>
+                        
                     </ul>
                     <form action="{{route('finition') }}" method="get">
                     <div>
-                        <input  class="form-check-input" type="radio" name="idMaison" value="{{$prixMaison->idMaison}}" id="{{$prixMaison->idMaison}}" class="me-2" style="transform: scale(1.5); margin-top: 10px;">
+                        <input  class="form-check-input" type="radio" name="idTypeMaison" value="{{$prixMaison->idTypeMaison}}" id="{{$prixMaison->idTypeMaison}}" class="me-2" style="transform: scale(1.5); margin-top: 10px;">
                     </div>
 
                 </div>  
@@ -55,7 +44,7 @@
         </div>
         @endforeach
         <div class="text-center">
-            <button type="submit" class="btn btn-primary mt-3" style="width: 300px;">Select</button> 
+            <button type="submit" class="btn btn-primary mt-3" style="width: 250px;">Select</button> 
         </div>
                     </form>
 

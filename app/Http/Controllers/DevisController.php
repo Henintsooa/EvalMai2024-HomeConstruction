@@ -23,9 +23,9 @@ class DevisController extends Controller
 {
     public function finition(Request $request)
     {
-        $idMaison = $request->input('idMaison');
+        $idTypeMaison = $request->input('idTypeMaison');
         $finitions = Finition::all();
-        return view('html.finition',['finitions'=>$finitions,'idMaison'=>$idMaison]);  
+        return view('html.finition',['finitions'=>$finitions,'idTypeMaison'=>$idTypeMaison]);  
     }
 
     public function insertDemandeDevis(Request $request)
@@ -33,14 +33,17 @@ class DevisController extends Controller
         $validator = Validator::make($request->all(), [
             'idFinition' => 'required|integer',
             'dateDebut' => 'required|date',
-            'idMaison' => 'required|integer',
+            'idTypeMaison' => 'required|integer',
+            'lieu' => 'required|string',
         ], [
             'idFinition.required' => 'Le champ Finition est requis.',
             'idFinition.integer' => 'Le champ Finition doit être un entier.',
             'dateDebut.required' => 'Le champ Date début est requis.',
             'dateDebut.date' => 'Le champ Date début doit être une date valide.',
-            'idMaison.required' => 'Le champ idMaison est requis.',
-            'idMaison.integer' => 'Le champ idMaison doit être un entier.',
+            'idTypeMaison.required' => 'Le champ idTypeMaison est requis.',
+            'idTypeMaison.integer' => 'Le champ idTypeMaison doit être un entier.',
+            'lieu.required' => 'Le champ lieu est requis.',
+
         ]);
         
         if ($validator->fails()) {
@@ -48,17 +51,26 @@ class DevisController extends Controller
         }
         
         $client = session('client');
-        $maison = DB::table('maison')->where('idMaison', $request->idMaison)->first();
-        $duree = DB::table('typeMaison')->where('idTypeMaison', $maison->idTypeMaison)->first()->duree;
+        $duree = DB::table('typeMaison')->where('idTypeMaison', $request->idTypeMaison)->first()->duree;
         
         $dateFin = date('Y-m-d', strtotime($request->dateDebut. ' + '.$duree.' days'));
         
-        DB::table('DemandeDevis')->insert([
-            'idMaison' => $request->idMaison,
+        $idDemandeDevis = DB::table('DemandeDevis')->insertGetId([
+            'idTypeMaison' => $request->idTypeMaison,
             'idClient' => $client->idClient,
             'idFinition' => $request->idFinition,
+            'pourcentage' => Finition::where('idFinition', $request->idFinition)->value('pourcentage'),
             'DateDebut' => $request->dateDebut,
             'DateFin' => $dateFin,
+            'DateCreation' => date('Y-m-d'),
+            'lieu' => $request->lieu,
+            'refDevis' => 0,
+        ]);
+
+        $refDevis = 'D00' . $idDemandeDevis;
+
+        DB::table('DemandeDevis')->where('idDemandeDevis', $idDemandeDevis)->update([
+            'refDevis' => $refDevis,
         ]);
         $prixMaisons=DB::table('prixMaison')->get();
         return view('html.index',['prixMaisons'=>$prixMaisons]);  

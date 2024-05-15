@@ -16,10 +16,25 @@
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
               </div>
+
               <div class="form-group mb-4">
                 <label for="devisFile">Devis</label>
                 <input class="form-control" type="file" accept=".csv" name="devisFile" id="devisFile">
                 @error('devisFile')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-success">Valider</button>
+              </div>
+            </form>
+
+            <form action="{{ route('importPaiement') }}" method="POST" enctype="multipart/form-data">
+              @csrf
+              <div class="form-group mb-4">
+                <label for="paiementFile">Paiement</label>
+                <input class="form-control" type="file" accept=".csv" name="paiementFile" id="paiementFile">
+                @error('paiementFile')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
               </div>

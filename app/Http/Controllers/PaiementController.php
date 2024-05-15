@@ -36,24 +36,32 @@ class PaiementController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $montantTotal = DB::table('viewListeDevis_Paiement')->where('idDemandeDevis', $request->input('idDemandeDevis'))->value('prixDevisTotal');
 
         if ($request->input('montant') < 0) {
-            return redirect()->back()->withErrors(['montant' => 'Le montant ne peut pas être négatif.'])->withInput();
+            return response()->json(['errors' => ['montant' => ['Le montant ne peut pas être négatif.']]], 422);
         }
 
         if ($request->input('montant') > $montantTotal) {
-            return redirect()->back()->withErrors(['montant' => 'Le montant ne peut pas dépasser le montant total.'])->withInput();
+            return response()->json(['errors' => ['montant' => ['Le montant ne peut pas dépasser le montant total.']]], 422);
         }
 
-        DB::table('historiquePaiement')->insert([
+        $idPaiement = DB::table('historiquePaiement')->insertGetId([
             'datePaiement' => $request->input('datePaiement'),
             'payer' => $request->input('montant'),
+            'idDemandeDevis' => $request->input('idDemandeDevis'),
+            'refDevis' => DB::table('demandeDevis')->where('idDemandeDevis', $request->input('idDemandeDevis'))->value('refDevis'),
+            'refPaiement' => 0,
+        ]);
+        $refPaiement = 'P00' . $idPaiement;
+
+        DB::table('historiquePaiement')->where('idHistorique', $idPaiement)->update([
+            'refPaiement' => $refPaiement,
         ]);
 
-        return redirect()->back()->with('success', 'Paiement enregistré avec succès.');
+        return response()->json(['message' => 'Paiement enregistré avec succès.'], 200);
     }
 }

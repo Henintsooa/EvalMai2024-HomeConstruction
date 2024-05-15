@@ -18,7 +18,7 @@
         <div class="card-body p-6">
           <h5 class="card-title fw-semibold mb-4">Informations</h5>
           <div><strong>Client :</strong> {{ $listeDevis->numero }}</div>
-          <div><strong>Maison :</strong> {{ $listeDevis->idMaison }}</div>
+          <div><strong>Maison :</strong> {{ $listeDevis->idTypeMaison }}</div>
           <div><strong>Date Debut :</strong> {{ \Carbon\Carbon::parse($listeDevis->DateDebut)->isoFormat('D MMMM YYYY') }}</div>
           <div><strong>Date Fin :</strong> {{ \Carbon\Carbon::parse($listeDevis->DateFin)->isoFormat('D MMMM YYYY') }}</div>
         </div>

@@ -70,7 +70,7 @@
 
                             
                             <td class="border-bottom-0">
-                              <p class="mb-0 fw-normal">Maison {{ $devis->idMaison }}</p>
+                              <p class="mb-0 fw-normal">Maison {{ $devis->idTypeMaison }}</p>
                               {{-- <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($devis->dateVente)->isoFormat('D MMMM YYYY') }}</p> --}}
                             </td>
                             </td>
@@ -93,8 +93,14 @@
                               <p class="mb-0 fw-normal">{{ number_format($devis->resteAPayer,2, ',', ' ') }} Ar</p>
                       
                             </td>
-                            <td class="border-bottom-0 ">
+                            <td class="border-bottom-0">
+                              @if($devis->etatPaiement === 'Non payé')
                               <p class="badge bg-danger mb-0 fw-normal">{{ $devis->etatPaiement }}</p>
+                              @elseif($devis->etatPaiement === 'En cours')
+                              <p class="badge bg-warning mb-0 fw-normal">{{ $devis->etatPaiement }}</p>
+                              @elseif($devis->etatPaiement === 'Payé')
+                              <p class="badge bg-success mb-0 fw-normal">{{ $devis->etatPaiement }}</p>
+                              @endif
                             </td>
                             <td class="border-bottom-0">
                               <a href="{{route('detailsDevis')}}?idDevis={{ $devis->idDevis }}&idDemandeDevis={{ $devis->idDemandeDevis }}" class="btn btn-primary btn-sm">Détails</a>

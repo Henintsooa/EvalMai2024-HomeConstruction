@@ -35,7 +35,15 @@
                         {{-- @error('dateDebut')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror --}}
-                        <input type="hidden" name="idMaison" value="{{$idMaison}}">
+                        <input type="hidden" name="idTypeMaison" value="{{$idTypeMaison}}">
+                    </div>  
+                    <div class="mb-3">
+                        <label for="lieu" class="form-label">Lieu</label>
+                        <input type="text" class="form-control" id="lieu" name="lieu">
+                        {{-- @error('dateDebut')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror --}}
+                        <input type="hidden" name="idTypeMaison" value="{{$idTypeMaison}}">
                     </div>                    
                     <button type="submit" id="submitBtn" class="btn btn-primary">Valider</button>
                 </form>

@@ -40,6 +40,8 @@ class HomeController extends Controller
         $prixDevis = DB::table('ViewListeDevis_Paiement')->get();
         $prixTotal = $prixDevis->sum('prixTotal');
 
+        $payer = $prixDevis->sum('payer');
+
         $annees = DB::table('ViewListeDevis_Prix AS v')
             ->select(DB::raw('EXTRACT(year FROM v.DateCreation) AS annee'))
             ->groupBy(DB::raw('EXTRACT(year FROM v.DateCreation)'))
@@ -58,7 +60,7 @@ class HomeController extends Controller
                 ->get();
         }
         
-        return view('html.admin', ['user' => $user, 'prixTotal' => $prixTotal, 'annees' => $annees, 'donneesHistogramme' => $donneesHistogramme]);   
+        return view('html.admin', ['user' => $user,'payer' => $payer, 'prixTotal' => $prixTotal, 'annees' => $annees, 'donneesHistogramme' => $donneesHistogramme]);   
     }
 
     public function user()
@@ -102,27 +104,40 @@ class HomeController extends Controller
         
     //     return view('html.index', ['user' => $user]);
     // }
+    // public function reset()
+    // {
+    //     DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+    //     $tables = DB::select('SHOW TABLES');
+    //     foreach ($tables as $table) {
+    //         if ($table === 'users') {
+    //             User::where('status', '!=', 'admin')->delete();
+    //         } else {
+    //             DB::table($table)->truncate();
+    //         }
+    //     }
+
+    //     DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+
+    //     return redirect()->back()->with('success', 'La base de données a été réinitialisée avec succès.');
+    // }
+    
     public function reset()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-        $tables = [
-            'users',
-            'test2',
-            'test',
-        ];
-
+        $tables = DB::select('SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = ? AND table_type = "BASE TABLE"', [env('DB_DATABASE')]);
         foreach ($tables as $table) {
-            if ($table === 'users') {
-                User::where('status', '!=', 'admin')->delete();
-            } else {
-                DB::table($table)->truncate();
+            if ($table->TABLE_NAME == 'users') {
+                continue;
             }
+            DB::table($table->TABLE_NAME)->truncate();
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-
         return redirect()->back()->with('success', 'La base de données a été réinitialisée avec succès.');
     }
+
 }
