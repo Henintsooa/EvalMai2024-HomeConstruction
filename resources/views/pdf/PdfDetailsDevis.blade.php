@@ -202,6 +202,71 @@
             </tr>
           </tbody>
         </table>
+
+        <div class="table-responsive">
+          <table class="table text-nowrap mb-0 align-middle">
+          <thead class="text-dark fs-4">
+          <tr>
+              
+            <th class="border-bottom-0">
+            <h6 class="fw-semibold mb-0">Date Paiement</h6>
+            {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'dateVente', 'order' => $nextOrder]) }}">Date</a> --}}
+            </th>
+          
+          
+              <th class="border-bottom-0">
+              <h6 class="fw-semibold mb-0">Payé</h6>
+              {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'nomUser', 'order' => $nextOrder]) }}">Nom User</a> --}}
+              </th>
+              <th class="border-bottom-0">
+            <h6 class="fw-semibold mb-0">refDevis</h6>
+            {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'nomPack', 'order' => $nextOrder]) }}">Nom Pack</a> --}}
+              </th>
+              <th class="border-bottom-0">
+            <h6 class="fw-semibold mb-0">refPaiement</h6>
+            {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'montantPack', 'order' => $nextOrder]) }}">Type Pack</a> --}}
+              </th>
+          </tr>
+          </thead>
+          <tbody>
+          @php
+              $sumTotal = 0;
+          @endphp
+          @foreach($histoPaiement as $histo)
+              @php
+              $sumTotal += $histo->payer;
+              @endphp
+  
+              <tr>
+              <td class="border-bottom-0">
+            <div> {{ \Carbon\Carbon::parse($histo->datePaiement)->isoFormat('D MMMM YYYY') }}</div>
+                {{-- <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($histo->dateVente)->isoFormat('D MMMM YYYY') }}</p> --}}
+              </td>
+              <td class="border-bottom-0">
+                <p class="mb-0 fw-normal">{{ $histo->payer  }}</p>
+              </td>
+              <td class="border-bottom-0">
+                <p class="mb-0 fw-normal">{{ $histo->refDevis  }}</p>
+              </td>
+              <td class="border-bottom-0">
+                <p class="mb-0 fw-normal">{{ $histo->refPaiement  }} </p>
+              </td>
+              
+              </tr>
+          @endforeach
+  
+          
+          <tr>
+            <td colspan="4" class="border-bottom-0"></td>
+            <td class="border-bottom-0 text-end"><p class="mb-0 fw-normal">Total</p></td>
+            <td class="border-bottom-0 text-end"><p class="mb-0 fw-normal">{{ number_format($sumTotal, 2, ',', ' ') }} Ar</p></td>
+          </tr>
+         
+          </tbody>
+          </table>
+          
+        
+        </div>
       </div>
     </div>
   </div>

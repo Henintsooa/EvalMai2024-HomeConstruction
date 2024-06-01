@@ -166,6 +166,11 @@ class ImportController extends Controller
         FROM importDevis im
         WHERE (im.finition,im.tauxFinition) NOT IN (SELECT nomFinition,pourcentage FROM finition)');
 
+        DB::statement('INSERT INTO lieu (nomLieu)
+        SELECT DISTINCT im.lieu
+        FROM importDevis im
+        WHERE (im.lieu) NOT IN (SELECT nomLieu FROM lieu)');
+
         DB::statement('INSERT INTO demandeDevis (idTypeMaison,idClient,idFinition,pourcentage,DateDebut,DateFin,DateCreation,lieu,refDevis)
         SELECT DISTINCT t.idTypeMaison,c.idClient,f.idFinition,im.tauxFinition,im.dateDebut,DATE_ADD(im.dateDebut, INTERVAL t.duree DAY),im.dateDevis,im.lieu,im.refDevis
         FROM importDevis im

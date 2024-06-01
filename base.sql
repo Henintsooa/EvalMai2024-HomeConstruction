@@ -79,6 +79,7 @@ CREATE TABLE DemandeDevis (
     idTypeMaison INT,
     idClient INT,
     idFinition INT,
+    nomFinition INT,
     pourcentage Double(20,2),
     DateCreation DateTime,
     DateDebut DateTime,
@@ -185,6 +186,11 @@ CREATE TABLE  importPaiement (
     montant Double(20,2)
     );
 
+CREATE TABLE lieu (
+    idLieu INT AUTO_INCREMENT PRIMARY KEY,
+    nomLieu VARCHAR(100)
+);
+
 -- details travaux typeMaison
 
 CREATE OR REPLACE View prixMaison AS
@@ -199,8 +205,10 @@ group by m.idMaison,d.idDevis,tm.idTypeMaison,tm.nomMaison,m.description;
 CREATE OR REPLACE VIEW ViewDemandeDevisDetails AS
 SELECT 
     demande.idTypeMaison,
+    tm.nomMaison,
     f.idFinition,
     f.nomFinition,
+    demande.lieu,
     demande.pourcentage,
     demande.DateCreation,
     demande.DateDebut,
@@ -214,6 +222,8 @@ JOIN
     finition f ON f.idFinition = demande.idFinition
 JOIN 
     client c ON c.idClient = demande.idClient
+JOIN 
+    typeMaison tm  ON tm.idTypeMaison = demande.idTypeMaison
 ORDER BY 
     demande.idDemandeDevis;
 
@@ -260,7 +270,14 @@ SELECT SUM(payer) as payer, idDemandeDevis, refDevis
 FROM historiquePaiement
 GROUP BY idDemandeDevis, refDevis;
 
+-------Paiement par idDemandeDevis
+CREATE OR REPLACE VIEW ViewHistoPaiementDetails AS
+select h.idDemandeDevis,h.datePaiement,h.payer,h.refDevis,h.refPaiement 
+from historiquePaiement h
+join ViewListeDevis_Paiement v on h.idDemandeDevis = v.idDemandeDevis
 
+
+where v.idDemandeDevis = 1
 
 -- CREATE OR REPLACE VIEW ViewDetailsDevis AS
 SELECT t.numero, t.designation, t.unite, dd.quantite, dd.pu, dd.prixTotal

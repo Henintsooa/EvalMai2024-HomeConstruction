@@ -28,7 +28,10 @@
                                 <h6 class="fw-semibold mb-0">Maison</h6>
                                 {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'dateVente', 'order' => $nextOrder]) }}">Date</a> --}}
                             </th>
-                            
+                            <th class="border-bottom-0">
+                              <h6 class="fw-semibold mb-0">Lieu</h6>
+                              {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'dateVente', 'order' => $nextOrder]) }}">Date</a> --}}
+                            </th>
                             <th class="border-bottom-0">
                               <h6 class="fw-semibold mb-0">Client</h6>
                               {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'dateVente', 'order' => $nextOrder]) }}">Date</a> --}}
@@ -78,8 +81,11 @@
 
                             
                             <td class="border-bottom-0">
-                              <p class="mb-0 fw-normal">Maison {{ $devis->idTypeMaison }}</p>
+                              <p class="mb-0 fw-normal">{{ $devis->nomMaison }}</p>
                               {{-- <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($devis->dateVente)->isoFormat('D MMMM YYYY') }}</p> --}}
+                            </td>
+                            <td class="border-bottom-0">
+                              <p class="mb-0 fw-normal">{{ $devis->lieu }}</p>
                             </td>
                             </td>
                             <td class="border-bottom-0">
@@ -88,6 +94,7 @@
                             <td class="border-bottom-0">
                               <p class="mb-0 fw-normal">{{ $devis->nomFinition }}</p>
                             </td>
+                            
                             <td class="border-bottom-0">
                               <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($devis->DateDebut)->isoFormat('D MMMM YYYY')  }}</p>
                             </td>
@@ -101,8 +108,12 @@
                               <p class="mb-0 fw-normal">{{ number_format($devis->payer,2, ',', ' ') }} Ar</p>
                             </td>
                             <td class="border-bottom-0">
-                              <p class="mb-0 fw-normal">{{ number_format($devis->pourcentagePaye,2, ',', ' ') }} %</p>
-                            <td class="border-bottom-0">
+                              @if($devis->pourcentagePaye < 50)
+                              <p class="mb-0 fw-normal" style="color:red">{{ number_format($devis->pourcentagePaye,2, ',', ' ') }} %</p>
+                              @elseif($devis->pourcentagePaye > 50)
+                              <p class="mb-0 fw-normal" style="color:green">{{ number_format($devis->pourcentagePaye,2, ',', ' ') }} %</p>
+                              @endif
+                              <td class="border-bottom-0">
                               <p class="mb-0 fw-normal">{{ number_format($devis->resteAPayer,2, ',', ' ') }} Ar</p>
                       
                             </td>
@@ -125,6 +136,10 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div>
+                  {{ $listeDevis->links('vendor.pagination.bootstrap-4') }}
+                </div>
+
                 
               
               </div>

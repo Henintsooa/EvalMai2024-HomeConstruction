@@ -79,7 +79,7 @@ class DevisController extends Controller
     public function listeDevis()
     {
         $client = session('client');
-        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idClient', $client->idClient)->get();
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idClient', $client->idClient)->paginate(5);
         return view('html.listeDevis',['listeDevis'=>$listeDevis]);
     }
 
@@ -89,14 +89,15 @@ class DevisController extends Controller
         $idDemandeDevis = request()->query('idDemandeDevis');
 
         $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDemandeDevis', $idDemandeDevis)->first();
-
+        $histoPaiement=DB::table('ViewHistoPaiementDetails')->where('idDemandeDevis', $idDemandeDevis)->get();
+         
         $detailsDevis = DB::table('devisDetails')
             ->join('travaux', 'travaux.idTravaux', '=', 'devisDetails.idTravaux')
             ->select('travaux.numero', 'travaux.designation', 'travaux.unite', 'devisDetails.quantite', 'devisDetails.pu', 'devisDetails.prixTotal')
             ->where('devisDetails.idDevis', $idDevis)
             ->get();
 
-        return view('html.detailsDevis',['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis]);
+        return view('html.detailsDevis',['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis,'histoPaiement'=>$histoPaiement]);
     }
 
     public function pdfDevis()
@@ -105,6 +106,7 @@ class DevisController extends Controller
         $idDemandeDevis = request()->query('idDemandeDevis');
         
         $listeDevis=DB::table('ViewListeDevis_Paiement')->where('idDemandeDevis', $idDemandeDevis)->first();
+        $histoPaiement=DB::table('ViewHistoPaiementDetails')->where('idDemandeDevis', $idDemandeDevis)->get();
 
         $detailsDevis = DB::table('devisDetails')
             ->join('travaux', 'travaux.idTravaux', '=', 'devisDetails.idTravaux')
@@ -112,7 +114,7 @@ class DevisController extends Controller
             ->where('devisDetails.idDevis', $idDevis)
             ->get();
         
-        $html = View::make('pdf.PdfDetailsDevis')->with(['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis])->render();
+        $html = View::make('pdf.PdfDetailsDevis')->with(['detailsDevis'=>$detailsDevis,'listeDevis'=>$listeDevis,'histoPaiement'=>$histoPaiement])->render();
 
         // Créez un nouvel objet Dompdf
         $dompdf = new Dompdf();
@@ -134,7 +136,7 @@ class DevisController extends Controller
     public function listeDevisAdmin()
     {
         $client = session('client');
-        $listeDevis=DB::table('ViewListeDevis_Paiement')->get();
+        $listeDevis=DB::table('ViewListeDevis_Paiement')->paginate(5);
         return view('html.adminListeDevis',['listeDevis'=>$listeDevis]);
     }
 }

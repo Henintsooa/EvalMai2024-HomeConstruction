@@ -28,7 +28,10 @@
                               <h6 class="fw-semibold mb-0">Maison</h6>
                               {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'dateVente', 'order' => $nextOrder]) }}">Date</a> --}}
                           </th>
-                        
+                          <th class="border-bottom-0">
+                            <h6 class="fw-semibold mb-0">Lieu</h6>
+                            {{-- <a class="fw-semibold mb-0 sort-link" href="{{ route('vente.tri', ['sort' => 'dateVente', 'order' => $nextOrder]) }}">Date</a> --}}
+                          </th>
                         
                             <th class="border-bottom-0">
                                 <h6 class="fw-semibold mb-0">Finition</h6>
@@ -70,9 +73,11 @@
 
                             
                             <td class="border-bottom-0">
-                              <p class="mb-0 fw-normal">Maison {{ $devis->idTypeMaison }}</p>
+                              <p class="mb-0 fw-normal">{{ $devis->nomMaison }}</p>
                               {{-- <p class="mb-0 fw-normal">{{ \Carbon\Carbon::parse($devis->dateVente)->isoFormat('D MMMM YYYY') }}</p> --}}
                             </td>
+                            <td class="border-bottom-0">
+                              <p class="mb-0 fw-normal">{{ $devis->lieu }}</p>
                             </td>
                             <td class="border-bottom-0">
                               <p class="mb-0 fw-normal">{{ $devis->nomFinition }}</p>
@@ -115,7 +120,9 @@
                         @endforeach
                     </tbody>
                 </table>
-                
+                <div>
+                  {{ $listeDevis->links('vendor.pagination.bootstrap-4') }}
+                </div>
               
               </div>
             </div>
